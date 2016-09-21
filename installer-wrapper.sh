@@ -60,7 +60,7 @@ sh $BINDIR/prepare-disks.sh
 # These should be passed in via metadata
 export MAPR_PASSWD=${5:-MapRAZ}
 export AUTH_METHOD=${6:-password}
-export MAPR_VERSION=${4:-5.0.0} 
+export MAPR_VERSION=${4:-5.2.0} 
 sh $BINDIR/prepare-node.sh
 
 sh $BINDIR/gen-cluster-hosts.sh ${1:-$CLUSTER_HOSTNAME_BASE} ${2:-}
@@ -152,7 +152,7 @@ perl $BINDIR/mapr_inst.pl root $MAPR_PASSWD $SUDO_USER $CLUSTER_NAME
 # Post-install operations on successful deployment
 # enable SUDO_USER to access the cluster
 [ ${SUDO_USER} != "root" ] && \
-	su $MAPR_USER -c "maprcli acl edit -type cluster -user $SUDO_USER:login"
+	su $MAPR_USER -c "maprcli acl edit -type cluster -user $SUDO_USER:login,fc,ss,cv,a"
 
 # Restart NFS (in case we installed trial license)
 maprcli license apps -noheader | grep -q -w NFS

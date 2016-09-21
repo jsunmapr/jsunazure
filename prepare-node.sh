@@ -21,10 +21,10 @@
 #	Note: The official release of GCE requires extra HTTP headers to
 #	satisfy the metadata requests.
 #
-murl_top=http://metadata/computeMetadata/v1
-murl_attr="${murl_top}/instance/attributes"
+#murl_top=http://metadata/computeMetadata/v1
+#murl_attr="${murl_top}/instance/attributes"
 
-THIS_FQDN=$(curl -f $murl_top/instance/hostname)
+#THIS_FQDN=$(curl -f $murl_top/instance/hostname)
 if [ -z "${THIS_FQDN}" ] ; then
 	THIS_HOST=${THIS_FQDN/.*/}
 else
@@ -34,24 +34,14 @@ fi
 # Definitions for our installation
 #	These should use the same meta-data definitions as the configure-* script
 #
-curl -f $murl_attr &> /dev/null
-if [ $? -eq 0 ] ; then
-	MAPR_HOME=$(curl -f $murl_attr/maprhome)
-	MAPR_UID=$(curl -f $murl_attr/mapruid)
-	MAPR_USER=$(curl -f $murl_attr/mapruser)
-	MAPR_GROUP=$(curl -f $murl_attr/maprgroup)
-	MAPR_PASSWD=$(curl -f $murl_attr/maprpasswd)
-
-	MAPR_VERSION=$(curl -f $murl_attr/maprversion)
-	MAPR_PACKAGES=$(curl -f $murl_attr/maprpackages)
-fi
+#curl -f $murl_attr &> /dev/null
 
 MAPR_HOME=${MAPR_HOME:-"/opt/mapr"}
 MAPR_UID=${MAPR_UID:-"5000"}
 MAPR_USER=${MAPR_USER:-"mapr"}
 MAPR_GROUP=${MAPR_GROUP:-"mapr"}
 MAPR_PASSWD=${MAPR_PASSWD:-"MapR"}
-MAPR_VERSION=${MAPR_VERSION:-"5.0.0"}
+MAPR_VERSION=${MAPR_VERSION:-"5.2.0"}
 
 MAPR_PACKAGES=${MAPR_PACKAGES:-"core,fileserver"}
 MAPR_PACKAGES=${MAPR_PACKAGES//:/,}
@@ -203,7 +193,7 @@ function update_ntp_config() {
 
 		# TBD: copy in /usr/share/zoneinfo file based on 
 		# zone in which the instance is deployed
-	zoneInfo=$(curl -f ${murl_top}/zone)
+	#zoneInfo=$(curl -f ${murl_top}/zone)
 	curZone=`basename "${zoneInfo}"`
 	curTZ=`date +"%Z"`
 	echo "    Instance zone is $curZone; TZ setting is $curTZ" >> $LOG
@@ -479,7 +469,7 @@ function add_mapr_user() {
 			# now is the time to make sure it lines up
 			# with the pre-existing account.
 			#	NOTE: we ONLY do this if a UID was passed in
-		target_uid=$(curl -f $murl_attr/mapruid)
+		#target_uid=$(curl -f $murl_attr/mapruid)
 		if [ -n "${target_uid}" -a  `id -u $MAPR_USER` -ne "${target_uid:-0}" ] ; then
 			echo "updating ${MAPR_USER} account to uid ${MAPR_UID}" >> $LOG
 			usermod -u ${target_uid} ${MAPR_USER}
