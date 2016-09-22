@@ -32,9 +32,9 @@
             }
         },
         "maprVersion": {
-            "defaultValue": "5.1.0",
+            "defaultValue": "5.2.0",
             "type": "string",
-            "allowedValues": ["5.1.0"],
+            "allowedValues": ["5.2.0"],
             "metadata": {
                  "description": "MapR Software Version"
             }
