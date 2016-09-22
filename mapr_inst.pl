@@ -215,8 +215,9 @@ sub post_inst{
 #system("clush -a service sshd restart");
 #$lca=`find /var/lib/waagent -name lca`; chomp $lca;
 #system("chmod u+x $lca;$lca");
-#system("rm -rf /tmp/mapr_install.sh");
-#system("rm -rf /spyglass.sh");
+system("rm -rf /tmp/mapr_install.sh");
+system("rm -rf /spyglass.sh");
+system("cat /dev/null > `find /var/lib/waagent -name errout`");
 print "Cluster is ready.\n";
 } #post_inst
 
