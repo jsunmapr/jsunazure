@@ -160,7 +160,7 @@ if ($mtime >=100){print "Cluster failed to install\n";exit 1;}
 
 }until($checkfs==1 & $checkmcs==1);
 
-print "Cluster is ready...\n";
+print "Core cluster is ready...\n";
 } #core
 
 sub hiveserver_inst{
