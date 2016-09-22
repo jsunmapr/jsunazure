@@ -101,7 +101,7 @@ $spyglassf="
 clush -a yum install mapr-collectd mapr-fluentd -y
 clush -g ot yum install mapr-grafana mapr-opentsdb -y
 clush -g es yum install mapr-elasticsearch mapr-kibana -y
-/opt/mapr/server/configure.sh -R -ES `nodeset -S, -e \@es` -OT `nodeset -S, -e \@ot`
+clush -a /opt/mapr/server/configure.sh -R -ES `nodeset -S, -e \@es` -OT `nodeset -S, -e \@ot`
 
 clush -a service mapr-warden restart
 ";
