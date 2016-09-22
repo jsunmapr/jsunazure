@@ -567,7 +567,7 @@ EOF_ubuntu
 function setup_mapr_repo_rpm() {
     MAPR_REPO_FILE=/etc/yum.repos.d/mapr.repo
     MAPR_PKG="http://package.mapr.com/releases/v${MAPR_VERSION}/redhat"
-    MAPR_ECO="http://package.mapr.com/releases/ecosystem/redhat"
+    MAPR_ECO="http://package.mapr.com/releases/MEP/MEP-1.0.0/redhat"
 
 	major_ver=${MAPR_VERSION%%.*}
 	if [ ${major_ver:-3} -gt 3 ] ; then
@@ -586,15 +586,15 @@ function setup_mapr_repo_rpm() {
 [MapR]
 name=MapR Version $MAPR_VERSION media
 baseurl=$MAPR_PKG
-${MAPR_PKG//package.mapr.com/archive.mapr.com}
+${MAPR_PKG}
 enabled=1
 gpgcheck=0
 protected=1
 
-[MapR_ecosystem]
-name=MapR Ecosystem Components
+[MEP]
+name=MapR Ecosystem Packs (MEP)
 baseurl=$MAPR_ECO
-${MAPR_ECO//package.mapr.com/archive.mapr.com}
+${MAPR_ECO}
 enabled=1
 gpgcheck=0
 protected=1

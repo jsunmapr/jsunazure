@@ -16,13 +16,16 @@ $nbase=$1 . "node";
 system("sed -i \"s/^all:.*/all:$nbase\[0-$#tmp]/g\" $clushf");
 
 switch($nnodes){
-case 1 {@zk=qw(0);@cldb=qw(0);@rm=qw(0);@hs=qw(0);@web=qw(0);}
-case 2 {@zk=qw(0);@cldb=qw(0);@rm=qw(0);@hs=qw(0);@web=qw(0);}
-case 3 {@zk=qw(0 1 2);@cldb=qw(0 1);@rm=qw(0 1);@hs=qw(2);@web=qw(0);}
-case 4 {@zk=qw(0 1 2);@cldb=qw(0 1);@rm=qw(0 1);@hs=qw(2);@web=qw(0);}
-case 5 {@zk=qw(0 1 2);@cldb=qw(0 1);@rm=qw(0 1);@hs=qw(2);@web=qw(0);}
-else {@zk=qw(0 1 2);@cldb=qw(3 4 5);@rm=qw(4 5);@hs=qw(4);@web=qw(0 1);}
+case 1 {@zk=qw(0);@cldb=qw(0);@rm=qw(0);@hs=qw(0);@web=qw(0);@sparkhist=qw(0);}
+case 2 {@zk=qw(0);@cldb=qw(0);@rm=qw(0);@hs=qw(0);@web=qw(0);@sparkhist=qw(0);}
+case 3 {@zk=qw(0 1 2);@cldb=qw(0 1);@rm=qw(0 1);@hs=qw(2);@web=qw(0);@sparkhist=qw(2);}
+case 4 {@zk=qw(0 1 2);@cldb=qw(0 1);@rm=qw(0 1);@hs=qw(2);@web=qw(0);@sparkhist=qw(2);}
+case 5 {@zk=qw(0 1 2);@cldb=qw(0 1);@rm=qw(0 1);@hs=qw(2);@web=qw(0);@sparkhist=qw(2);}
+else {@zk=qw(0 1 2);@cldb=qw(3 4 5);@rm=qw(4 5);@hs=qw(4);@web=qw(0 1);@sparkhist=qw(2);}
 }
+
+@ot=@hs;
+@es=@rm;
 
 $zk="zk:";
 foreach $h (@zk){
@@ -54,8 +57,20 @@ $web= $web . $nbase . $h . ",";
 }
 chop $web;
 
+$ot="ot:";
+foreach $h (@ot){
+$ot= $ot . $nbase . $h . ",";
+}
+chop $ot;
+
+$es="es:";
+foreach $h (@es){
+$es= $es . $nbase . $h . ",";
+}
+chop $es;
+
 open(FILE,">>$clushf");
-print FILE "$cldb\n$zk\n$rm\n$hs\n$web\n";
+print FILE "$cldb\n$zk\n$rm\n$hs\n$web\n$ot\n$es\n";
 close(FILE);
 
 
@@ -81,8 +96,22 @@ clush -a /etc/init.d/mapr-zookeeper start
 clush -a /etc/init.d/mapr-warden start
 ";
 
+$spyglassf="
+clush -g ot yum install mapr-collectd mapr-grafana mapr-opentsdb -y
+clush -a /opt/mapr/server/configure.sh -R -OT `nodeset -S, -e \@ot`
+
+clush -g es yum install mapr-fluentd mapr-elasticsearch mapr-kibana -y
+/opt/mapr/server/configure.sh -R -ES `nodeset -S, -e \@es`
+
+clush -a service mapr-warden restart
+";
+
 open(INST,">/tmp/mapr_install.sh");
 print INST $inst_script;
+close(INST);
+
+open(INST,">/tmp/spyglass.sh");
+print INST $spyglassf;
 close(INST);
 
 system("sh /tmp/mapr_install.sh");
@@ -100,12 +129,36 @@ $mcs=$?;
 if ($mcs == 0){$checkmcs=1}else{$checkmcs=0}
 
 print "Waiting for base cluster to be ready...\n";
-sleep 2;
+sleep 3;
 $mtime=$mtime+2;
 
 if ($mtime >=100){print "Cluster failed to install\n";exit 1;}
 
 }until($checkfs==1 & $checkmcs==1);
+
+print "Installing MapR Monitoring....\n";
+system("sh /tmp/spyglass.sh");
+
+#wait for the cluster to be ready
+$checkfs=$checkmcs=$mtime=0;
+do{
+
+`hadoop fs -stat / >& /dev/null`;
+$fs=$?;
+if ($fs == 0){$checkfs=1}else{$checkfs=0}
+
+`lsof -i :8443 | grep -i listen >& /dev/null`;
+$mcs=$?;
+if ($mcs == 0){$checkmcs=1}else{$checkmcs=0}
+
+print "Waiting for base cluster to be ready...\n";
+sleep 3;
+$mtime=$mtime+2;
+
+if ($mtime >=100){print "Cluster failed to install\n";exit 1;}
+
+}until($checkfs==1 & $checkmcs==1);
+
 print "Cluster is ready...\n";
 } #core
 
@@ -161,7 +214,8 @@ sub post_inst{
 #system("clush -a service sshd restart");
 #$lca=`find /var/lib/waagent -name lca`; chomp $lca;
 #system("chmod u+x $lca;$lca");
-system("rm -rf /tmp/mapr_install.sh");
+#system("rm -rf /tmp/mapr_install.sh");
+#system("rm -rf /spyglass.sh");
 print "Cluster is ready.\n";
 } #post_inst
 
