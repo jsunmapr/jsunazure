@@ -81,6 +81,7 @@ clush -g rm yum install mapr-resourcemanager -y
 clush -g hs yum install mapr-historyserver -y
 clush -g web yum install mapr-webserver -y
 
+echo \"Installing patches....\"
 clush -a rpm -Uvh http://package.mapr.com/patches/releases/v5.2.0/redhat/mapr-patch-5.2.0.39122.GA-39350.x86_64.rpm
 
 clush -a /opt/mapr/server/configure.sh -C `nodeset -S, -e \@cldb` -Z `nodeset -S, -e \@zk` -N $clustername -RM `nodeset -S, -e \@rm` -HS `nodeset -S, -e \@hs` -no-autostart
