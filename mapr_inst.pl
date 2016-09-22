@@ -25,7 +25,7 @@ else {@zk=qw(0 1 2);@cldb=qw(3 4 5);@rm=qw(4 5);@hs=qw(4);@web=qw(0 1);@sparkhis
 }
 
 @ot=@hs;
-@es=@rm;
+@es=($rm[0]);
 
 $zk="zk:";
 foreach $h (@zk){
@@ -73,7 +73,6 @@ open(FILE,">>$clushf");
 print FILE "$cldb\n$zk\n$rm\n$hs\n$web\n$ot\n$es\n";
 close(FILE);
 
-
 $inst_script="
 clush -g zk yum install mapr-zookeeper -y
 clush -a yum install mapr-fileserver mapr-nfs mapr-nodemanager -y
@@ -81,6 +80,8 @@ clush -g cldb yum install mapr-cldb -y
 clush -g rm yum install mapr-resourcemanager -y
 clush -g hs yum install mapr-historyserver -y
 clush -g web yum install mapr-webserver -y
+
+clush -a rpm -Uvh http://package.mapr.com/patches/releases/v5.2.0/redhat/mapr-patch-5.2.0.39122.GA-39350.x86_64.rpm
 
 clush -a /opt/mapr/server/configure.sh -C `nodeset -S, -e \@cldb` -Z `nodeset -S, -e \@zk` -N $clustername -RM `nodeset -S, -e \@rm` -HS `nodeset -S, -e \@hs` -no-autostart
 
@@ -97,11 +98,10 @@ clush -a /etc/init.d/mapr-warden start
 ";
 
 $spyglassf="
-clush -g ot yum install mapr-collectd mapr-grafana mapr-opentsdb -y
-clush -a /opt/mapr/server/configure.sh -R -OT `nodeset -S, -e \@ot`
-
-clush -g es yum install mapr-fluentd mapr-elasticsearch mapr-kibana -y
-/opt/mapr/server/configure.sh -R -ES `nodeset -S, -e \@es`
+clush -a yum install mapr-collectd mapr-fluentd -y
+clush -g ot yum install mapr-grafana mapr-opentsdb -y
+clush -g es yum install mapr-elasticsearch mapr-kibana -y
+/opt/mapr/server/configure.sh -R -ES `nodeset -S, -e \@es` -OT `nodeset -S, -e \@ot`
 
 clush -a service mapr-warden restart
 ";
