@@ -176,7 +176,6 @@ system("mysqladmin -u $mysql_user password $mysql_passwd");
 $hive_srv_config=
 "<property><name>javax.jdo.option.ConnectionURL<\\/name><value>jdbc:mysql:\\/\\/localhost:3306\\/hive?createDatabaseIfNotExist=true<\\/value><\\/property>\\n<property><name>javax.jdo.option.ConnectionDriverName<\\/name><value>com.mysql.jdbc.Driver<\\/value><\\/property>\\n<property><name>javax.jdo.option.ConnectionUserName<\\/name><value>$mysql_user<\\/value><\\/property>\\n<property><name>javax.jdo.option.ConnectionPassword<\\/name><value>$mysql_passwd<\\/value><\\/property>\\n<property><name>hive.metastore.warehouse.dir<\\/name><value>\\/user\\/hive\\/warehouse<\\/value><\\/property>\\n<property><name>hive.metastore.uris<\\/name><value>thrift:\\/\\/localhost:9083<\\/value><\\/property>\\n<property><name>datanucleus.autoCreateSchema<\\/name><value>true<\\/value><\\/property>\\n<property><name>datanucleus.autoCreateTables<\\/name><value>true<\\/value><\\/property>\\n<\\/configuration>";
 
-#print "sed -e \"s/<\\/configuration>\/$hive_srv_config\/g\" $hive_config_file\n"; 
 system("sed -i \"s/<\\/configuration>\/$hive_srv_config\/g\" $hive_config_file\n"); 
 system("yum -y install mapr-hiveserver2");
 system("clush -a /opt/mapr/server/configure.sh -R"); 
@@ -211,12 +210,8 @@ system("clush -a yum -y install mapr-drill");
 } #hiveserver
 
 sub post_inst{
-#system("clush -a \"sed -i 's/#PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config\"");
-#system("clush -a service sshd restart");
-#system("chmod u+x $lca;$lca");
 system("rm -rf /tmp/mapr_install.sh");
 system("rm -rf /spyglass.sh");
-#system("cat /dev/null > `find /var/lib/waagent -name errout`");
 print "Cluster is ready.\n";
 } #post_inst
 

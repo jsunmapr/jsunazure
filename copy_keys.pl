@@ -47,4 +47,3 @@ while ($success != 0){
   system("cp /tmp/authorized_keys /root/.ssh/authorized_keys");
 }
 
-#system("cat /dev/null > `find /var/lib/waagent -name errout`");
