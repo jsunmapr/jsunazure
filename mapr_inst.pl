@@ -211,7 +211,7 @@ system("clush -a yum -y install mapr-drill");
 
 sub post_inst{
 system("rm -rf /tmp/mapr_install.sh");
-system("rm -rf /spyglass.sh");
+system("rm -rf /tmp/spyglass.sh");
 print "Cluster is ready.\n";
 } #post_inst
 

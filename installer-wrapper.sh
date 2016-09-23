@@ -46,6 +46,8 @@ BINDIR=`dirname $THIS`
 #	(or be passed in)
 SUDO_USER=${7:-azadmin}
 SUDO_PASSWD=${8:-MapRAzur3}
+MAPR_EDITION=${3:-covergedCommunity}
+echo $MAPR_EDITION > /tmp/mapredition
 
 # We need to set the password, because it is *not* set in the case where
 # we use PKI. We are going to later turn it off
