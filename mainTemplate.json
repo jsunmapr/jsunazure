@@ -134,6 +134,8 @@
         "scriptsUri" : "[concat(parameters('artifactsBaseUrl'), '/')]",
         "nicBasename": "[concat(parameters('clusterName'),'-nic')]",
         "publicIPAddressBasename": "[concat(parameters('clusterName'),'-publicIP')]",
+        "location": "[resourceGroup().location]",
+        "uniqueString": "[uniquestring(resourceGroup().id)]",
         "publicIPAddressType" : "Dynamic"
     },
     "resources": [
@@ -288,5 +290,10 @@
         }
     }
     ],
-    "outputs": {}    
+  "outputs": {
+    "Web Console": {
+      "type": "string",
+      "value": "[concat('http://',parameters('clusterName'),variables('uniqueString'),'-node0.',variables('location'),'.cloudapp.azure.com:8443')]"
+    }
+  }
 }
