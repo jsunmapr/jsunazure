@@ -163,3 +163,4 @@ maprcli license apps -noheader | grep -q -w NFS
 #	NOTE: This means that the users will have to take the private
 #	key from the Admin User to run the installer again.
 
+exit 0
