@@ -73,7 +73,7 @@ sh $BINDIR/gen-create-lock.sh $SUDO_USER
 # and launch the process on the one node ... the first one in the cluster
 
 # Simple test ... are we node 0 ?
-[ "$HOSTNAME" != "${CLUSTER_HOSTNAME_BASE}0" ] && perl $BINDIR/copy_keys.pl ${CLUSTER_HOSTNAME_BASE}0 $SUDO_USER && exit 0
+[ "$HOSTNAME" != "${CLUSTER_HOSTNAME_BASE}0" ] && perl $BINDIR/copy_keys.pl ${CLUSTER_HOSTNAME_BASE}0 $SUDO_USER && cat /dev/null > `find /var/lib/waagent -name errout` && exit 0
 
 export MAPR_CLUSTER=AZtest
 [ -f /tmp/mkclustername ] && MAPR_CLUSTER=`cat /tmp/mkclustername` 
