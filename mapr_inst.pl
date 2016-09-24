@@ -80,6 +80,7 @@ print FILE "$cldb\n$zk\n$rm\n$hs\n$web\n$ot\n$es\n$sparkhist\n";
 close(FILE);
 
 $inst_script="
+clush -ac /etc/hosts --dest /etc/hosts
 clush -g zk yum install mapr-zookeeper -y
 clush -a yum install mapr-fileserver mapr-nfs mapr-nodemanager mapr-spark -y
 clush -g cldb yum install mapr-cldb -y
@@ -227,7 +228,6 @@ print "Cluster is ready.\n";
 
 
 #main
-system("/usr/bin/clush -ac /etc/hosts --dest /etc/hosts");
 print "Installing MapR Core...\n";
 &core_inst(($ARGV[$#ARGV]));
 print "Installing Hive metastore and Hive server ...\n";
