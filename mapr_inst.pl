@@ -87,7 +87,7 @@ clush -g cldb yum install mapr-cldb -y
 clush -g rm yum install mapr-resourcemanager -y
 clush -g hs yum install mapr-historyserver -y
 clush -g web yum install mapr-webserver -y
-clush -g sparkhist yum install mapr-spark-historyserver -y
+#clush -g sparkhist yum install mapr-spark-historyserver -y
 
 echo \"Installing patches....\"
 clush -a rpm -Uvh http://package.mapr.com/patches/releases/v5.2.0/redhat/mapr-patch-5.2.0.39122.GA-39350.x86_64.rpm
@@ -192,7 +192,7 @@ sleep 20;
 `maprcli node services -name hs2 -action stop -nodes $headnode >& /dev/null`;
 `maprcli node services -name hivemeta -action start -nodes $headnode >& /dev/null`;
 `maprcli node services -name hs2 -action start -nodes $headnode >& /dev/null`;
-`maprcli node services -name spark-historyserver -action restart -nodes $sparkhist[0] >& /dev/null`;
+#`maprcli node services -name spark-historyserver -action restart -nodes $sparkhist[0] >& /dev/null`;
 
 while ($hivetmp != 0 | $hstmp != 0){
 print "Waiting for hivemeta and hs2 to come up....\n";
