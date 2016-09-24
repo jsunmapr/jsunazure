@@ -192,6 +192,7 @@ sleep 20;
 `maprcli node services -name hs2 -action stop -nodes $headnode >& /dev/null`;
 `maprcli node services -name hivemeta -action start -nodes $headnode >& /dev/null`;
 `maprcli node services -name hs2 -action start -nodes $headnode >& /dev/null`;
+`maprcli node services -name spark-historyserver -action start -nodes $sparkhist[0] >& /dev/null`;
 
 while ($hivetmp != 0 | $hstmp != 0){
 print "Waiting for hivemeta and hs2 to come up....\n";
