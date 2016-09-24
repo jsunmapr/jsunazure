@@ -203,12 +203,15 @@ sleep 3;
 print "Hive Server is ready.\n";
 system("hadoop fs -mkdir -p /user/$sudo_user/tmp/hive");
 system("hadoop fs -mkdir -p /user/hive");
+system("hadoop fs -mkdir -p /apps/spark");
 system("hadoop fs -chown -R $sudo_user /user/$sudo_user");
 system("hadoop fs -chgrp -R $sudo_user /user/$sudo_user");
 system("hadoop fs -chown -R mapr /user/hive");
 system("hadoop fs -chgrp -R mapr /user/hive");
 system("hadoop fs -chmod -R 777 /user/$sudo_user/tmp");
 system("hadoop fs -chmod -R 777 /user/hive");
+system("hadoop fs -chown -R $sudo_user /apps");
+system("hadoop fs -chgrp -R $sudo_user /apps");
 
 #install drill
 print "Installing Drill..\n";
@@ -219,13 +222,12 @@ system("clush -a yum -y install mapr-drill");
 sub post_inst{
 system("rm -rf /tmp/mapr_install.sh");
 system("rm -rf /tmp/spyglass.sh");
-sysstem("hadoop fs -mkdir -p /apps/spark;hadoop fs -chgrp $sudo_user -R /apps;hadoop fs -chown $sudo_user -R /apps");
 print "Cluster is ready.\n";
 } #post_inst
 
 
 #main
-system("clush -ac /etc/hosts");
+system("/usr/bin/clush -ac /etc/hosts --dest /etc/hosts");
 print "Installing MapR Core...\n";
 &core_inst(($ARGV[$#ARGV]));
 print "Installing Hive metastore and Hive server ...\n";
