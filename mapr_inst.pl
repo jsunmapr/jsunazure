@@ -76,12 +76,12 @@ $es= $es . $nbase . $h . ",";
 chop $es;
 
 open(FILE,">>$clushf");
-print FILE "$cldb\n$zk\n$rm\n$hs\n$web\n$ot\n$es\n";
+print FILE "$cldb\n$zk\n$rm\n$hs\n$web\n$ot\n$es\n$sparkhist\n";
 close(FILE);
 
 $inst_script="
 clush -g zk yum install mapr-zookeeper -y
-clush -a yum install mapr-fileserver mapr-nfs mapr-nodemanager mapr-drill mapr-spark -y
+clush -a yum install mapr-fileserver mapr-nfs mapr-nodemanager mapr-spark -y
 clush -g cldb yum install mapr-cldb -y
 clush -g rm yum install mapr-resourcemanager -y
 clush -g hs yum install mapr-historyserver -y
@@ -209,6 +209,10 @@ system("hadoop fs -chown -R mapr /user/hive");
 system("hadoop fs -chgrp -R mapr /user/hive");
 system("hadoop fs -chmod -R 777 /user/$sudo_user/tmp");
 system("hadoop fs -chmod -R 777 /user/hive");
+
+#install drill
+print "Installing Drill..\n";
+system("clush -a yum -y install mapr-drill");
 
 } #hiveserver
 
